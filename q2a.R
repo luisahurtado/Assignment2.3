@@ -6,7 +6,6 @@
 #install.packages("maps")
 
 #Load the libraries. 
-library(WDI)
 library("Matrix")
 library("flexmix")
 library("lattice")
@@ -18,14 +17,13 @@ library(ggmap)
 
 # Obtain the data. 
 install.packages("WDI")
+library(WDI)
 
 # Search the variables related to CO2.
 WDIsearch('co2 .* capita')
-WDIsearch('country')
 
 # We extract the data and save it in 
-worldco2 <- WDI(country = "all", indicator = "EN.ATM.CO2E.PC", start = 2014,
-    end = 2014, extra = TRUE)
+worldco2 <- WDI(country = "all", indicator = "EN.ATM.CO2E.PC", start = 2014, end = 2014, extra = TRUE)
 head(worldco2,3)
 
 # Convert the object as tibble. 
@@ -58,4 +56,4 @@ worldco2c$countrycode <- countrycode(worldco2c$country, origin="country.name",de
 joinedData <- left_join(worldco2c,dataMap, by="countrycode")
 
 # Finally, plot the map
-ggplot(joinedData,aes(x=long,y=lat,group=group,fill=emission,)) + geom_polygon() + coord_quickmap() + scale_size_area() + ggtitle("Distribution of CO2 emission in the world (tons per capita)") + labs(x=NULL,y=NULL, fill="CO2 emissions") + guides(fill=guide_colorbar(size=7,reverse=FALSE)) + theme(legend.direction="horizontal",legend.position="bottom",legend.justification=c(0.5,0.5), legend.title = element_text(size = 9),plot.title = element_text(hjust = 0.5),axis.text.x=element_blank(),axis.text.y=element_blank()) + scale_fill_gradient(low="orange", high="red")
+ggplot(joinedData,aes(x=long,y=lat,group=group,fill=emission,)) + geom_polygon() + coord_quickmap() + scale_size_area() + ggtitle("Distribution of CO2 emission in the world during 2014 (tons per capita)") + labs(x=NULL,y=NULL, fill="CO2 emissions") + guides(fill=guide_colorbar(size=7,reverse=FALSE)) + theme(legend.direction="horizontal",legend.position="bottom", legend.justification=c(0.5,0.5), legend.title = element_text(size = 9),plot.title = element_text(hjust = 0.5), axis.text.x=element_blank(),axis.text.y=element_blank()) + scale_fill_gradient(low="orange", high="red")
